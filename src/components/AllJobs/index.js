@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import {Component} from 'react'
 import Loader from 'react-loader-spinner'
 import Cookies from 'js-cookie'
 import {AiOutlineSearch} from 'react-icons/ai'
@@ -111,9 +111,7 @@ class AllJobs extends Component {
     this.setState({apiJobsStatus: apiJobsStatusConstants.inProgress})
     const jwtToken = Cookies.get('jwt_token')
     const {checkboxInputs, radioInput, searchInput} = this.state
-    const jobsApiUrl = `https://apis.ccbp.in/jobs?employment_type=${checkboxInputs.join(
-      ',',
-    )}&minimum_package=${radioInput}&search=${searchInput}`
+    const jobsApiUrl = `https://apis.ccbp.in/jobs?employment_type=${checkboxInputs}&minimum_package=${radioInput}&search=${searchInput}`
     const optionsJobs = {
       headers: {
         Authorization: `Bearer ${jwtToken}`,
@@ -122,7 +120,7 @@ class AllJobs extends Component {
     }
     const responseJobs = await fetch(jobsApiUrl, optionsJobs)
 
-    if (responseJobs.ok) {
+    if (responseJobs.ok === true) {
       const fetchedDataJobs = await responseJobs.json()
       const updatedDataJobs = fetchedDataJobs.jobs.map(eachItem => ({
         companyLogoUrl: eachItem.company_logo_url,
@@ -151,7 +149,7 @@ class AllJobs extends Component {
   onGetInputOption = event => {
     const {checkboxInputs} = this.state
     const inputNotInList = checkboxInputs.filter(
-      eachItem => eachItem !== event.target.id,
+      eachItem => eachItem === event.target.id,
     )
 
     if (inputNotInList.length === 0) {
